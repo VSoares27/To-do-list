@@ -1,0 +1,52 @@
+CREATE TABLE CategoryEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL
+);
+
+CREATE TABLE TaskEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    description TEXT,
+    completed INTEGER NOT NULL DEFAULT 0,
+    dueDateTime INTEGER,
+    createdAt INTEGER NOT NULL,
+    categoryId INTEGER,
+    notificationId INTEGER,
+    FOREIGN KEY (categoryId) REFERENCES CategoryEntity(id) ON DELETE SET NULL
+);
+
+insertCategory:
+INSERT INTO CategoryEntity(name) VALUES (?);
+
+updateCategory:
+UPDATE CategoryEntity SET name = ? WHERE id = ?;
+
+deleteCategory:
+DELETE FROM CategoryEntity WHERE id = ?;
+
+selectAllCategories:
+SELECT * FROM CategoryEntity;
+
+getCategoryById:
+SELECT * FROM CategoryEntity WHERE id = ?;
+
+insertTask:
+INSERT INTO TaskEntity(title, description, completed, dueDateTime, createdAt, categoryId, notificationId)
+VALUES (?, ?, ?, ?, ?, ?, ?);
+
+updateTask:
+UPDATE TaskEntity 
+SET title = ?, description = ?, completed = ?, dueDateTime = ?, categoryId = ?, notificationId = ?
+WHERE id = ?;
+
+deleteTask:
+DELETE FROM TaskEntity WHERE id = ?;
+
+getTaskById:
+SELECT * FROM TaskEntity WHERE id = ?;
+
+selectAllTasksWithCategory:
+SELECT TaskEntity.*, CategoryEntity.name AS categoryName 
+FROM TaskEntity 
+LEFT JOIN CategoryEntity ON TaskEntity.categoryId = CategoryEntity.id
+ORDER BY TaskEntity.createdAt DESC;
